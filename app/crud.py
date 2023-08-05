@@ -3,15 +3,15 @@ from . import schemas, models
 from fastapi import Response, status
 
 
-def create_task(db: Session, task: schemas.CreateTask):
-    db_task = models.Task(**task.model_dump())
+def create_task(db: Session, task: schemas.CreateTask, current_user: schemas.User):
+    db_task = models.Task(**task.model_dump(), owner_id=current_user.id)
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
     return db_task
 
-def read_tasks(db: Session):
-    return db.query(models.Task).all()
+def read_tasks(db: Session, search: str):
+    return db.query(models.Task).filter(models.Task.title.contains(search)).all()
 
 def read_task(db: Session, task_id: int):
     return db.query(models.Task).filter(models.Task.id == task_id).first()

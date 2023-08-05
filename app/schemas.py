@@ -18,18 +18,21 @@ class CreateUser(UserBase):
     password: str
     pass
 
-class task(TaskBase):
-    id: int
-    status: str
-
-    class Config:
-        from_attributes = True
-
 class User(UserBase):
     id: int
 
     class Config:
         from_attributes = True
+
+class task(TaskBase):
+    id: int
+    status: str
+    owner_id: int
+    owner: User
+
+    class Config:
+        from_attributes = True
+
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -40,4 +43,4 @@ class Token(BaseModel):
     token_type: str
 
 class TokenData(BaseModel):
-    id: Optional[int] = None
+    id: int = None
